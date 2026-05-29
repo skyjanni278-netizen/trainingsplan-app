@@ -1,0 +1,156 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.level {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+.kpis {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.kpiVal {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.kpiLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.dayCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+  padding: 0.6rem 0.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.dayDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dayName {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.dayLabel {
+  font-size: 0.7rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.dayDur {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.dayNote {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.plan {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.875rem;
+}
+
+.planTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: var(--text);
+}
+
+.exercises {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.exercises li {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding-left: 0.75rem;
+  position: relative;
+}
+
+.exercises li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+}
+
+.cyclingNote {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-left: 3px solid var(--primary);
+  padding-left: 0.75rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .week { grid-template-columns: repeat(4, 1fr); }
+  .plans { grid-template-columns: 1fr; }
+  .kpis { flex-wrap: wrap; justify-content: flex-end; }
+}

@@ -1,21 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../hooks/useApi'
+import PhaseView from '../components/PhaseView'
+import { PHASES, PHASE_BY_MONTH, SPORT_COLORS } from '../data/phases'
 import styles from './Dashboard.module.css'
-
-const DAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
-const PHASE_MONTHS = [5, 6, 7, 8, 9, 10, 11]
-const PHASE_NAMES = ['Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
 
 function toISO(date) {
   return date.toISOString().slice(0, 10)
-}
-
-function getMonday(date) {
-  const d = new Date(date)
-  const day = d.getDay()
-  d.setDate(d.getDate() - (day === 0 ? 6 : day - 1))
-  return d
 }
 
 export default function Dashboard() {
@@ -23,10 +14,17 @@ export default function Dashboard() {
   const username = localStorage.getItem('username')
   const navigate = useNavigate()
 
-  const [log, setLog] = useState({ workout_done: 0, workout_type: null, notes: null })
+  const currentMonth = new Date().getMonth()
+  const currentPhaseIdx = PHASE_BY_MONTH[currentMonth] ?? null
+  const currentPhase = currentPhaseIdx !== null ? PHASES[currentPhaseIdx] : null
+  const todayWeekday = new Date().getDay()
+  const dayIdx = todayWeekday === 0 ? 6 : todayWeekday - 1
+  const todayPlan = currentPhase?.days[dayIdx] ?? null
+
+  const [log, setLog] = useState({ workout_done: 0, workout_type: null })
   const [supplements, setSupplements] = useState({ kreatin: 0, protein: 0, vitd: 0, magnesium: 0 })
   const [weekLogs, setWeekLogs] = useState([])
-  const [activeTab, setActiveTab] = useState(new Date().getMonth())
+  const [activePhaseId, setActivePhaseId] = useState(currentPhaseIdx ?? 0)
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -51,10 +49,11 @@ export default function Dashboard() {
 
   async function toggleWorkout() {
     const next = log.workout_done ? 0 : 1
+    const type = todayPlan?.t ?? log.workout_type
     setLog(prev => ({ ...prev, workout_done: next }))
     setSaving(true)
     try {
-      await api.post(`/logs/${today}`, { workout_done: next, workout_type: log.workout_type })
+      await api.post(`/logs/${today}`, { workout_done: next, workout_type: type })
       await loadWeek()
     } finally {
       setSaving(false)
@@ -84,8 +83,7 @@ export default function Dashboard() {
   const doneTasks = (log.workout_done ? 1 : 0) + suppKeys.filter(k => supplements[k]).length
   const progress = Math.round((doneTasks / totalTasks) * 100)
 
-  const currentMonth = new Date().getMonth()
-  const phaseIdx = PHASE_MONTHS.indexOf(currentMonth)
+  const activePhase = PHASES[activePhaseId]
 
   return (
     <div className={styles.page}>
@@ -107,6 +105,19 @@ export default function Dashboard() {
             </span>
           </div>
 
+          {todayPlan && (
+            <div className={styles.todayPlan}>
+              <span
+                className={styles.sportBadge}
+                style={{ background: SPORT_COLORS[todayPlan.t] || '#888' }}
+              >
+                {todayPlan.l}
+              </span>
+              <span className={styles.planDur}>{todayPlan.d}</span>
+              {todayPlan.nt && <span className={styles.planNote}>{todayPlan.nt}</span>}
+            </div>
+          )}
+
           <div className={styles.progressBar}>
             <div className={styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
@@ -120,9 +131,7 @@ export default function Dashboard() {
             >
               {log.workout_done ? '✓' : '○'}
             </button>
-            <span className={styles.checkLabel}>
-              {phaseIdx >= 0 ? `Training (Phase ${phaseIdx + 1})` : 'Training'}
-            </span>
+            <span className={styles.checkLabel}>Training abgehakt</span>
           </div>
 
           <div className={styles.supplements}>
@@ -157,20 +166,18 @@ export default function Dashboard() {
 
         <section className={styles.phases}>
           <div className={styles.tabs}>
-            {PHASE_NAMES.map((name, i) => (
+            {PHASES.map(phase => (
               <button
-                key={i}
-                className={`${styles.tab} ${activeTab === PHASE_MONTHS[i] ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab(PHASE_MONTHS[i])}
+                key={phase.id}
+                className={`${styles.tab} ${activePhaseId === phase.id ? styles.activeTab : ''}`}
+                style={activePhaseId === phase.id ? { borderBottomColor: phase.col, color: phase.col } : {}}
+                onClick={() => setActivePhaseId(phase.id)}
               >
-                {name}
+                {phase.name}
               </button>
             ))}
           </div>
-          <div className={styles.phaseInfo}>
-            <p className={styles.phaseHint}>Phase {PHASE_MONTHS.indexOf(activeTab) + 1} — {PHASE_NAMES[PHASE_MONTHS.indexOf(activeTab)]}</p>
-            <p className={styles.phaseDetail}>Detaillierte Phasenansicht folgt in v0.5</p>
-          </div>
+          <PhaseView phase={activePhase} />
         </section>
       </main>
     </div>

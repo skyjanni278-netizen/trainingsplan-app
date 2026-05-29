@@ -89,6 +89,32 @@
   color: var(--text-muted);
 }
 
+.todayPlan {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.sportBadge {
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.planDur {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.planNote {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .progressBar {
   height: 6px;
   background: var(--border);

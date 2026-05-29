@@ -1,0 +1,12 @@
+{
+  "name": "trainingsplan-backend",
+  "version": "0.1.0",
+  "description": "Trainingsplan API Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "license": "ISC",
+  "type": "commonjs"
+}

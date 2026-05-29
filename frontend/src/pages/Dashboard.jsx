@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../hooks/useApi'
 import PhaseView from '../components/PhaseView'
+import ThemeToggle from '../components/ThemeToggle'
 import { PHASES, PHASE_BY_MONTH, SPORT_COLORS } from '../data/phases'
 import styles from './Dashboard.module.css'
 
@@ -91,6 +92,7 @@ export default function Dashboard() {
         <span className={styles.logo}>Trainingsplan</span>
         <nav className={styles.nav}>
           <button onClick={() => navigate('/stats')} className={styles.navBtn}>Statistiken</button>
+          <ThemeToggle />
           <span className={styles.username}>{username}</span>
           <button onClick={logout} className={styles.logoutBtn}>Abmelden</button>
         </nav>

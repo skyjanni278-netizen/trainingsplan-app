@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell
 } from 'recharts'
 import api from '../hooks/useApi'
+import ThemeToggle from '../components/ThemeToggle'
 import styles from './Stats.module.css'
 
 const MONTH_NAMES = {
@@ -76,6 +77,7 @@ export default function Stats() {
       <header className={styles.header}>
         <button onClick={() => navigate('/')} className={styles.back}>← Dashboard</button>
         <h1 className={styles.title}>Statistiken</h1>
+        <div style={{ marginLeft: 'auto' }}><ThemeToggle /></div>
       </header>
 
       <main className={styles.main}>
